@@ -4,7 +4,7 @@ export default function Page() {
       className="bg-no-repeat bg-cover bg-center relative"
       style={{
         backgroundImage:
-          "url('https://img.freepik.com/free-photo/steel-blue-abstract-background-wallpaper-image_53876-104016.jpg?t=st=1718390084~exp=1718393684~hmac=cbd436d7a363defc723cd33dfa72f8784b740749007a33f396a60a5543532742&w=2000')"}}>
+          "/images/steel-blue-abstract-background-wallpaper-image.jpg')"}}>
       {/* <div className="absolute bg-gradient-to-b from-green-500 to-green-400 opacity-75 inset-0 z-0"></div> */}
       <div className="absolute inset-0 z-0 opacity-75 bg-gradient-to-b from-[#34CDEA]/90 to-[#348DEA]/80"></div>
       <div className="min-h-screen sm:flex sm:flex-row mx-0 justify-center">
