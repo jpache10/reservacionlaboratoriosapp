@@ -1,6 +1,32 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useRef, useEffect } from "react";
 
 export default function Page() {
+  const [isOpen, setIsOpen] = useState(false);
+  const modalRef = useRef<HTMLDialogElement>(null);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      modalRef.current.showModal();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen && modalRef.current) {
+      modalRef.current.close();
+    }
+  }, [isOpen]);
+
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -107,9 +133,26 @@ export default function Page() {
                   </svg>{" "}
                   <Link href="/">Ir a inicio</Link>
                 </button>
-                <button className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">
-                  Crear
+
+                <button
+                  onClick={openModal}
+                  className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
+                >
+                  Registrar
                 </button>
+                <div>
+                  <dialog ref={modalRef} className="modal">
+                    <div className="modal-box">
+                      <h3 className="font-bold text-lg">Listo</h3>
+                      <p className="py-4">Empleado registrado con éxito</p>
+                      <div className="modal-action">
+                        <button className="btn" onClick={closeModal}>
+                          <Link href="/empleados">Cerrar</Link>
+                        </button>
+                      </div>
+                    </div>
+                  </dialog>
+                </div>
               </div>
             </div>
           </div>
