@@ -29,7 +29,7 @@ export default function Page() {
 
   return (
     <div className="ml-5 mt-5">
-      <h1 className="text-3xl text-gray-700 font-bold mb-5">Empleados</h1>
+      <h1 className="text-3xl text-gray-700 font-bold mb-5">Aulas</h1>
       <div className="breadcrumbs text-sm mb-5">
         <ul>
           <li>
@@ -38,14 +38,14 @@ export default function Page() {
             </Link>
           </li>
           <li>
-            <a className="text-gray-700 font-bold">Empleados</a>
+            <a className="text-gray-700 font-bold">Aulas</a>
           </li>
         </ul>
       </div>
       <div className="flex justify-between mb-5">
         <button className="btn btn-info font-bold">
           <Link href="/empleados/registrar" legacyBehavior>
-            <a className="text-white">+ Registrar un empleado</a>
+            <a className="text-white">+</a>
           </Link >
         </button>
       </div>

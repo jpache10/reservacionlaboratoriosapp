@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 export const getTipoAulas = async (): Promise<ApiResponse> => {
-    const response = await api.get(`consulta/tipo_aulas`); // Utilizando baseURL directamente
+    const response = await api.get(`/consulta/tipo_aulas`); // Utilizando baseURL directamente
 
     if (!response.data || typeof response.data !== 'object' || !('estado' in response.data) || !('data' in response.data)) {
         throw new Error('Invalid API response format');
