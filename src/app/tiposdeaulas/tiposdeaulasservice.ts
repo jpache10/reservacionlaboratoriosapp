@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiResponse } from './types';
+import { ApiResponse } from './tiposdeaulas';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL_LOCAL,

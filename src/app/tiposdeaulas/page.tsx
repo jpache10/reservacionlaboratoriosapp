@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { getTipoAulas } from './tiposdeaulasservice';
-import { TipoAula } from './types';
+import { TipoAula } from './tiposdeaulas';
 
 export default function Page() {
   const [tipoAulas, setTipoAulas] = useState<TipoAula[]>([]);
