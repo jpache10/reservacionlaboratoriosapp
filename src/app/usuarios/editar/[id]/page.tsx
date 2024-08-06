@@ -4,8 +4,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { UsuarioPost } from "../usuario"; // Asegúrate de que la ruta sea correcta
-import { createUsuario } from "../usuarioservice"; // Asegúrate de que la ruta sea correcta
+import { UsuarioPost } from "../../usuario"; // Asegúrate de que la ruta sea correcta
+import { createUsuario } from "../../usuarioservice"; // Asegúrate de que la ruta sea correcta
 import Link from "next/link";
 
 export default function NewUserForm() {
