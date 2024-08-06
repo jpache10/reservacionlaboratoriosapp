@@ -2,20 +2,36 @@
 
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { getAulas } from "./aulasservice"; // Ajusta el path si es necesario
+import { getAulas, deleteAula } from "./aulasservice"; // Ajusta el path si es necesario
 import { Aula } from "./aula"; // Ajusta el path si es necesario
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
   const [aulas, setAulas] = useState<Aula[]>([]);
+  const [selectedAula, setSelectedAula] = useState<number | null>(null);
   const modalRef = useRef<HTMLDialogElement>(null);
 
-  const openModal = () => {
+  const openModal = (aulaId: number) => {
+    setSelectedAula(aulaId);
     setIsOpen(true);
   };
 
   const closeModal = () => {
     setIsOpen(false);
+    setSelectedAula(null);
+  };
+
+  const handleDelete = async () => {
+    if (selectedAula === null) return;
+
+    try {
+      await deleteAula(selectedAula);
+      setAulas((prevAulas) => prevAulas.filter((aula) => aula.AulaID !== selectedAula));
+      closeModal();
+    } catch (error) {
+      console.error("Error deleting aula:", error);
+      alert("Error eliminando el aula. Por favor intenta de nuevo.");
+    }
   };
 
   useEffect(() => {
@@ -81,7 +97,7 @@ export default function Page() {
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
             {Array.isArray(aulas) &&
-              aulas.map((aula, index) => (
+              aulas.map((aula) => (
                 <tr key={aula.AulaID} className="hover:bg-gray-50">
                   <td className="px-6 py-4">{aula.AulaID}</td>
                   <td className="px-6 py-4">{aula.Descripcion}</td>
@@ -92,7 +108,7 @@ export default function Page() {
                   <td className="px-6 py-4">{aula.Estado}</td>
                   <td className="px-6 py-4">
                     <div className="flex justify-end gap-4">
-                      <a x-data="{ tooltip: 'Delete' }" onClick={openModal}>
+                      <button onClick={() => openModal(aula.AulaID!)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -100,7 +116,6 @@ export default function Page() {
                           strokeWidth="1.5"
                           stroke="currentColor"
                           className="h-6 w-6"
-                          x-tooltip="tooltip"
                         >
                           <path
                             strokeLinecap="round"
@@ -108,8 +123,8 @@ export default function Page() {
                             d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
                           />
                         </svg>
-                      </a>
-                      <a x-data="{ tooltip: 'Edit' }" href={`/aulas/editar/${aula.AulaID}`}>
+                      </button>
+                      <a href={`/aulas/editar/${aula.AulaID}`}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -117,7 +132,6 @@ export default function Page() {
                           strokeWidth="1.5"
                           stroke="currentColor"
                           className="h-6 w-6"
-                          x-tooltip="tooltip"
                         >
                           <path
                             strokeLinecap="round"
@@ -126,7 +140,7 @@ export default function Page() {
                           />
                         </svg>
                       </a>
-                      <a x-data="{ tooltip: 'View' }" href={`/aulas/detalles/${aula.AulaID}`}>
+                      <a href={`/aulas/detalles/${aula.AulaID}`}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -134,12 +148,16 @@ export default function Page() {
                           strokeWidth="1.5"
                           stroke="currentColor"
                           className="h-6 w-6"
-                          x-tooltip="tooltip"
                         >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            d="M15 12m-3.75 0a3.75 3.75 0 107.5 0 3.75 3.75 0 00-7.5 0zm-1.25 0A5 5 0 1115 17a5 5 0 01-5-5zm-7.85 0a12.47 12.47 0 0110.71-5.85A12.5 12.5 0 113.9 12z"
+                            d="M1.5 12s3-7 10.5-7 10.5 7 10.5 7-3 7-10.5 7S1.5 12 1.5 12z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 9.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z"
                           />
                         </svg>
                       </a>
@@ -154,13 +172,14 @@ export default function Page() {
       <div>
         <dialog ref={modalRef} className="modal">
           <div className="modal-box">
-            <h3 className="font-bold text-lg">Listo</h3>
-            <p className="py-4">Empleado eliminado con éxito</p>
+            <h3 className="font-bold text-lg">Confirmación de Eliminación</h3>
+            <p className="py-4">¿Estás seguro que deseas eliminar este aula?</p>
             <div className="modal-action">
+              <button className="btn btn-error" onClick={handleDelete}>
+                Eliminar
+              </button>
               <button className="btn" onClick={closeModal}>
-                <Link href="/empleados" legacyBehavior>
-                  <a>Cerrar</a>
-                </Link>
+                Cancelar
               </button>
             </div>
           </div>

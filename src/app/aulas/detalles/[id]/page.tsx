@@ -61,7 +61,7 @@ export default function Page() {
             <p className="mt-1 block w-full bg-gray-100 p-2 rounded">{aula.Estado}</p>
           </div>
           <div className="flex justify-between">
-            <Link href="/aulas" className="btn btn-secondary">
+            <Link href="/aulas" className="bg-gray-200 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 font-normal">
               Volver
             </Link>
           </div>

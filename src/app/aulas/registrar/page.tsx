@@ -1,16 +1,23 @@
+// pages/aulas/registrar.tsx
+
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { AulaPost } from "../aula"; // Ruta correcta según tu estructura
+import { createAula } from "../aulasservice"; // Ruta correcta según tu estructura
 import Link from "next/link";
 
 export default function NewClassroomForm() {
-  const [formData, setFormData] = useState({
-    description: "Centro de emprendimiento",
-    capacity: 10,
-    reservedSpots: 5,
-    roomType: "Laboratorio",
-    building: "Edif. 5",
-    status: "Activo",
+  const router = useRouter();
+
+  const [formData, setFormData] = useState<Omit<AulaPost, 'id_aula' | 'created_at' | 'updated_at'>>({
+    descripcion: "Nombre del aula",
+    capacidad: 10,
+    cupos: 5,
+    tipo_aula: 1,
+    edificio: 6,
+    estado: "Activo",
   });
 
   const handleChange = (
@@ -19,23 +26,31 @@ export default function NewClassroomForm() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "capacity" || name === "reservedSpots" ? parseInt(value) : value,
+      [name]: name === "capacidad" || name === "cupos" || name === "tipo_aula" || name === "edificio"
+        ? parseInt(value)
+        : value,
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    try {
+      await createAula(formData);
+      console.log("Form submitted:", formData);
+      router.push("/aulas");
+    } catch (error) {
+      console.error("Error creating aula:", error);
+    }
   };
 
   const handleReset = () => {
     setFormData({
-      description: "",
-      capacity: 0,
-      reservedSpots: 0,
-      roomType: "",
-      building: "",
-      status: "",
+      descripcion: "",
+      capacidad: 0,
+      cupos: 0,
+      tipo_aula: 1,
+      edificio: 5,
+      estado: "Activo",
     });
   };
 
@@ -45,12 +60,12 @@ export default function NewClassroomForm() {
       <div className="breadcrumbs text-sm mb-5">
         <ul>
           <li>
-            <Link href="/aulas" legacyBehavior>
-              <a className="text-gray-500 hover:text-black">Aulas</a>
-            </Link>
+            <a href="/aulas" className="text-gray-500 hover:text-black">
+              Aulas
+            </a>
           </li>
           <li>
-            <a className="text-black font-bold">Registrar</a>
+            <span className="text-black font-bold">Registrar</span>
           </li>
         </ul>
       </div>
@@ -58,42 +73,42 @@ export default function NewClassroomForm() {
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Nueva Aula</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="description" className="block text-sm font-medium text-black mb-1">
+            <label htmlFor="descripcion" className="block text-sm font-medium text-black mb-1">
               Descripción<span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              name="description"
-              id="description"
-              value={formData.description}
+              name="descripcion"
+              id="descripcion"
+              value={formData.descripcion}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
               required
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="capacity" className="block text-sm font-medium text-black mb-1">
+            <label htmlFor="capacidad" className="block text-sm font-medium text-black mb-1">
               Capacidad<span className="text-red-500">*</span>
             </label>
             <input
               type="number"
-              name="capacity"
-              id="capacity"
-              value={formData.capacity}
+              name="capacidad"
+              id="capacidad"
+              value={formData.capacidad}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
               required
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="reservedSpots" className="block text-sm font-medium text-black mb-1">
+            <label htmlFor="cupos" className="block text-sm font-medium text-black mb-1">
               Cupos reservados<span className="text-red-500">*</span>
             </label>
             <input
               type="number"
-              name="reservedSpots"
-              id="reservedSpots"
-              value={formData.reservedSpots}
+              name="cupos"
+              id="cupos"
+              value={formData.cupos}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
               required
@@ -101,50 +116,55 @@ export default function NewClassroomForm() {
           </div>
           <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="roomType" className="block text-sm font-medium text-black mb-1">
+              <label htmlFor="tipo_aula" className="block text-sm font-medium text-black mb-1">
                 Tipo de Aula<span className="text-red-500">*</span>
               </label>
               <select
-                name="roomType"
-                id="roomType"
-                value={formData.roomType}
+                name="tipo_aula"
+                id="tipo_aula"
+                value={formData.tipo_aula}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
                 required
               >
-                <option value="Laboratorio">Laboratorio</option>
-                <option value="Conferencia">Conferencia</option>
-                <option value="Taller">Taller</option>
+                <option value={1}>Aula Teórica</option>
+                <option value={2}>Laboratorio de Computación</option>
+                <option value={3}>Aula Multimedia</option>
+                <option value={4}>Auditorio</option>
+                <option value={5}>Sala de Conferencias</option>
               </select>
             </div>
             <div>
-              <label htmlFor="building" className="block text-sm font-medium text-black mb-1">
+              <label htmlFor="edificio" className="block text-sm font-medium text-black mb-1">
                 Edificio<span className="text-red-500">*</span>
               </label>
               <select
-                name="building"
-                id="building"
-                value={formData.building}
+                name="edificio"
+                id="edificio"
+                value={formData.edificio}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
                 required
               >
-                <option value="Edif. 1">Edif. 1</option>
-                <option value="Edif. 2">Edif. 2</option>
-                <option value="Edif. 3">Edif. 3</option>
-                <option value="Edif. 4">Edif. 4</option>
-                <option value="Edif. 5">Edif. 5</option>
+                <option value="" disabled>
+                  Selecciona un edificio
+                </option>
+                <option value={6}>Edificio Principal</option>
+                <option value={7}>Edificio de Ciencias</option>
+                <option value={8}>Edificio de Ingeniería</option>
+                <option value={9}>Edificio de Humanidades</option>
+                <option value={10}>Edificio de Administración</option>
               </select>
             </div>
           </div>
           <div className="mb-6">
-            <label htmlFor="status" className="block text-sm font-medium text-black mb-1">
+            <label htmlFor="estado" className="block text-sm font-medium text-black mb-1">
               Estado<span className="text-red-500">*</span>
             </label>
             <select
-              name="status"
-              id="status"
-              value={formData.status}
+              name="estado"
+              id="estado"
+              value={formData.estado}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
               required
@@ -154,29 +174,31 @@ export default function NewClassroomForm() {
             </select>
           </div>
           <div className="flex justify-center">
-            <div className="flex justify-between text-sm mt-5">
+            <div className="flex justify-between text-sm mt-5 space-x-4">
               <button
                 type="submit"
-                className="mr-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 font-normal"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 font-normal"
               >
                 CREAR
               </button>
               <button
                 type="button"
                 onClick={handleReset}
-                className="btn mr-2 btn-active btn-ghost text-black font-normal"
+                className="bg-gray-200 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 font-normal"
               >
                 BORRAR DATOS
               </button>
               <button
                 type="button"
-                className="btn btn-active btn-ghost text-black font-normal"
+                onClick={() => router.back()}
+                className="bg-gray-200 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 font-normal"
               >
                 CANCELAR
               </button>
             </div>
           </div>
         </form>
-      </div></div>
+      </div>
+    </div>
   );
 }
