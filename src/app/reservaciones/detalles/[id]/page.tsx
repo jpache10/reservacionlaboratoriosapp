@@ -4,32 +4,56 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { getReservacionById } from "../../reservacionservice";
-import { Reservacion } from "../../reservacion";
+import { getReservacionById } from "../../../reservaciones/reservacionservice";
+import { getEmpleadoById } from "../../../empleados/empleadoService";
+import { getAulaById } from "../../../aulas/aulasservice";
+import { getUsuarioById } from "../../../usuarios/usuarioservice";
+import { Reservacion } from "../../../reservaciones/reservacion";
 import Link from "next/link";
 
 export default function ReservacionDetails() {
   const { id } = useParams();
   const [reservacion, setReservacion] = useState<Reservacion | null>(null);
+  const [nombreEmpleado, setNombreEmpleado] = useState<string | null>(null);
+  const [nombreAula, setNombreAula] = useState<string | null>(null);
+  const [nombreUsuario, setNombreUsuario] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (id) {
-      const fetchReservacion = async () => {
-        try {
+    const fetchDetails = async () => {
+      try {
+        if (id) {
           const response = await getReservacionById(Number(id));
           setReservacion(response.data);
-        } catch (error) {
-          console.error("Error fetching reservacion details:", error);
-          setError("No se pudo obtener la información de la reservación.");
-        } finally {
-          setLoading(false);
-        }
-      };
 
-      fetchReservacion();
-    }
+          // Obtener el nombre del empleado
+          if (response.data.EmpleadoID) {
+            const empleadoResponse = await getEmpleadoById(response.data.EmpleadoID);
+            setNombreEmpleado(empleadoResponse.data.Nombre);
+          }
+
+          // Obtener el nombre del aula
+          if (response.data.AulaID) {
+            const aulaResponse = await getAulaById(response.data.AulaID);
+            setNombreAula(aulaResponse.data.Descripcion);
+          }
+
+          // Obtener el nombre del usuario
+          if (response.data.UsuarioID) {
+            const usuarioResponse = await getUsuarioById(response.data.UsuarioID);
+            setNombreUsuario(usuarioResponse.data.Usuario);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching details:", error);
+        setError("No se pudo obtener la información de la reservación.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetails();
   }, [id]);
 
   if (loading) {
@@ -62,13 +86,13 @@ export default function ReservacionDetails() {
       <div className="p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Reservación #{reservacion.ReservacionID}</h2>
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Empleado: {reservacion.NombreEmpleado}</p>
+          <p className="text-sm text-gray-600">Empleado: {nombreEmpleado}</p>
         </div>
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Aula: {reservacion.NombreAula}</p>
+          <p className="text-sm text-gray-600">Aula: {nombreAula}</p>
         </div>
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Usuario: {reservacion.NombreUsuario}</p>
+          <p className="text-sm text-gray-600">Usuario: {nombreUsuario}</p>
         </div>
         <div className="mb-4">
           <p className="text-sm text-gray-600">Fecha de Reservación: {new Date(reservacion.FechaReservacion).toLocaleString()}</p>
