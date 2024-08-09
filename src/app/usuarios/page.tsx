@@ -128,7 +128,7 @@ export default function UsuariosPage() {
                       {usuario.Usuario}
                     </div>
                     <div className="text-gray-400">
-                      {usuario.Usuario.toLowerCase().split(" ").join(".")}{usuario.UsuarioID}@unapec.com.do
+                      {usuario.Usuario.toLowerCase().split(" ").join(".")}{usuario.UsuarioID}@unapec.edu.do
                     </div>
                   </div>
                 </td>

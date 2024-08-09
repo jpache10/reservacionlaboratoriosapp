@@ -4,16 +4,27 @@ import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, Tooltip, Legend, X
 import { getAulas, getUsuarios, getEmpleados, getReservaciones } from "./service";
 import { Aula, Usuario, Empleado, Reservacion } from "./general";
 import Navbar from './navbar/page'; // Componente Navbar
+import { getCurrentUser, logout } from "./account/authService"; // Importar funciones de autenticación
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const [aulas, setAulas] = useState<number>(0);
   const [usuarios, setUsuarios] = useState<number>(0);
   const [empleados, setEmpleados] = useState<number>(0);
   const [reservaciones, setReservaciones] = useState<number>(0);
   const [reservacionesData, setReservacionesData] = useState<Reservacion[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<Usuario | null>(null);
 
   useEffect(() => {
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+      setUser(currentUser);
+    } else {
+      router.push("/login"); // Redirige al login si no hay un usuario autenticado
+    }
+
     async function fetchData() {
       try {
         const aulasResponse = await getAulas();
@@ -33,7 +44,13 @@ export default function Home() {
     }
 
     fetchData();
-  }, []);
+  }, [router]);
+
+  const handleLogout = () => {
+    logout();
+    setUser(null);
+    router.push("/acccount/login");
+  };
 
   // Datos dinámicos para gráficos
   const lineData = reservacionesData.map((reservacion) => ({
@@ -69,6 +86,21 @@ export default function Home() {
       <div className="flex-1">
         <Navbar />
         <div className="p-8 bg-gray-100 min-h-screen">
+          <div className="flex justify-between items-center mb-8">
+            {user ? (
+              <>
+                <h2 className="text-2xl font-semibold text-gray-800">Bienvenido, {user.name}</h2>
+                <button 
+                  onClick={handleLogout} 
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                  Cerrar Sesión
+                </button>
+              </>
+            ) : (
+              <h2 className="text-2xl font-semibold text-gray-800">No estás autenticado</h2>
+            )}
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div className="p-4 bg-white shadow rounded-lg text-center">
               <h2 className="text-xl font-semibold text-gray-800">Aulas</h2>

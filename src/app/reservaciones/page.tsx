@@ -97,10 +97,10 @@ export default function ReservacionesPage() {
                 ID
               </th>
               <th scope="col" className="px-6 py-4 font-medium text-gray-900">
-                Empleado ID
+                Código Empleado
               </th>
               <th scope="col" className="px-6 py-4 font-medium text-gray-900">
-                Aula ID
+                Número del Aula
               </th>
               <th scope="col" className="px-6 py-4 font-medium text-gray-900">
                 Fecha

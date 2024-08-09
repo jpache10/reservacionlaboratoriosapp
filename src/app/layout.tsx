@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="flex">
           <SideBar />
-          <main className="flex-grow p-4">{children}</main>
+          <main className="flex-grow">{children}</main>
         </div>
       </body>
     </html>
