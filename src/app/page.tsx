@@ -89,7 +89,7 @@ export default function Home() {
           <div className="flex justify-between items-center mb-8">
             {user ? (
               <>
-                <h2 className="text-2xl font-semibold text-gray-800">Bienvenido, {user.name}</h2>
+                <h4 className="text-2xl font-semibold text-gray-800">Bienvenido, {user.name}</h4>
                 <button 
                   onClick={handleLogout} 
                   className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">

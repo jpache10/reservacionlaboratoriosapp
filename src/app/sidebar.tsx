@@ -28,7 +28,7 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <aside className="flex flex-col w-64 h-screen px-5 py-8 overflow-y-auto bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-blue-700 dark:border-gray-700">
+    <aside className="flex flex-col w-64 px-5 py-8 overflow-y-auto bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-blue-700 dark:border-gray-700">
       <Link href="/" legacyBehavior>
         <a className="text-2xl text-white font-bold">Laboratorios</a>
       </Link>
