@@ -5,7 +5,7 @@ export const login = async (email: string, password: string) => {
   const dummyUser = {
     email: "jesuspache26@unapec.edu.do",
     password: "daniel123",
-    name: "jesuspache"
+    name: "jesuspache26"
   };
 
   if (email === dummyUser.email && password === dummyUser.password) {
@@ -24,6 +24,7 @@ export const login = async (email: string, password: string) => {
   export const logout = () => {
     // Eliminar la información del usuario del localStorage
     localStorage.removeItem("user");
+    window.location.reload();
   };
   
   export const getCurrentUser = () => {

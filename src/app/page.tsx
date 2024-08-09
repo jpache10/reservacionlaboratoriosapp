@@ -49,7 +49,11 @@ export default function Home() {
   const handleLogout = () => {
     logout();
     setUser(null);
-    router.push("/acccount/login");
+    router.push("/account/login");
+  };
+
+  const handlePrint = () => {
+    window.print();  // Llama a la función de impresión del navegador
   };
 
   // Datos dinámicos para gráficos
@@ -185,8 +189,18 @@ export default function Home() {
               ))}
             </ul>
           </div>
+        <div className="flex justify-start mb-4 mt-4">
+            <button 
+              onClick={handlePrint} 
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              Generar Reporte
+            </button>
+          </div>
         </div>
+        {/* Botón para generar reporte */}
       </div>
+
+      
     </main>
   );
 }

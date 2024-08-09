@@ -9,26 +9,20 @@ export default function Sidebar() {
   const [user, setUser] = useState<Usuario | null>(null);
 
   useEffect(() => {
-    // Función para obtener el usuario actual
     const fetchCurrentUser = () => {
       const currentUser = getCurrentUser();
       setUser(currentUser);
     };
 
-    // Escuchar cambios en el localStorage
     window.addEventListener("storage", fetchCurrentUser);
-
-    // Obtener el usuario actual en la primera carga
     fetchCurrentUser();
-
-    // Limpiar el listener cuando el componente se desmonte
     return () => {
       window.removeEventListener("storage", fetchCurrentUser);
     };
   }, []);
 
   return (
-    <aside className="flex flex-col w-64 px-5 py-8 overflow-y-auto bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-blue-700 dark:border-gray-700">
+    <aside className="flex flex-col min-h-screen w-64 px-5 py-8 overflow-y-auto bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-blue-700 dark:border-gray-700">
       <Link href="/" legacyBehavior>
         <a className="text-2xl text-white font-bold">Laboratorios</a>
       </Link>
@@ -49,7 +43,7 @@ export default function Sidebar() {
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"
+                      d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25V9M9 12.75v6.75a2.25 2.25 0 002.25 2.25h1.5A2.25 2.25 0 0015 19.5v-6.75M12 12.75v6.75"
                     />
                   </svg>
                   <span className="mx-2 text-sm font-medium">Iniciar sesión</span>
@@ -70,7 +64,7 @@ export default function Sidebar() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"
+                        d="M4 4h16v2H4V4zM4 9h16v2H4V9zM4 14h16v2H4v-2zM4 19h16v2H4v-2z"
                       />
                     </svg>
                     <span className="mx-2 text-sm font-medium">Dashboard</span>
@@ -90,7 +84,7 @@ export default function Sidebar() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"
+                        d="M15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM6.75 17.25a7.5 7.5 0 0110.5 0"
                       />
                     </svg>
                     <span className="mx-2 text-sm font-medium">Usuarios</span>
@@ -110,7 +104,7 @@ export default function Sidebar() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"
+                        d="M8.25 9V5.25a.75.75 0 01.75-.75h6a.75.75 0 01.75.75V9m-7.5 0h7.5m-7.5 0A2.25 2.25 0 006 11.25v7.5A2.25 2.25 0 008.25 21h7.5A2.25 2.25 0 0018 18.75v-7.5A2.25 2.25 0 0015.75 9m-7.5 0V7.5m7.5 0V9"
                       />
                     </svg>
                     <span className="mx-2 text-sm font-medium">Reservaciones</span>
@@ -130,7 +124,7 @@ export default function Sidebar() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3"
+                        d="M15.75 7.5c0 1.518-1.232 2.75-2.75 2.75S10.25 9.018 10.25 7.5 11.482 4.75 13 4.75s2.75 1.232 2.75 2.75zM15.75 7.5v.125c0 1.57 1.28 2.845 2.85 2.87 1.57.025 2.85 1.3 2.85 2.87v1.875c0 .621-.504 1.125-1.125 1.125H4.875c-.621 0-1.125-.504-1.125-1.125V13.36c0-1.57 1.28-2.845 2.85-2.87 1.57-.025 2.85-1.3 2.85-2.87V7.5M18.5 10.5V11c0 .69-.56 1.25-1.25 1.25h-9.5C7.56 12.25 7 11.69 7 11v-.5M12 21v-2m0-6v2m0 4h2.25M15 21h-3m3 0h2.25"
                       />
                     </svg>
                     <span className="mx-2 text-sm font-medium">Empleados</span>
@@ -150,12 +144,7 @@ export default function Sidebar() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        d="M21 8.25v7.5a1.5 1.5 0 01-1.5 1.5h-15a1.5 1.5 0 01-1.5-1.5v-7.5m18-2.25H3m18 0H3m0 0V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25v.75M4.5 8.25h15M6 12.75h12m-9 3h6"
                       />
                     </svg>
                     <span className="mx-2 text-sm font-medium">Tipos de Aulas</span>
@@ -175,10 +164,70 @@ export default function Sidebar() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z"
+                        d="M6.75 3v18m4.5-18v18m4.5-18v18M3 8.25h18m-18 7.5h18"
                       />
                     </svg>
                     <span className="mx-2 text-sm font-medium">Aulas</span>
+                  </a>
+                </Link>
+
+                <Link href="/campus" legacyBehavior>
+                  <a className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 2.25L3.75 8.25l8.25 6 8.25-6L12 2.25zm0 17.25v4.5m-8.25-9v4.5M8.25 21v-7.5M15.75 21v-7.5m4.5 9v-4.5"
+                      />
+                    </svg>
+                    <span className="mx-2 text-sm font-medium">Campus</span>
+                  </a>
+                </Link>
+
+                <Link href="/edificios" legacyBehavior>
+                  <a className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3 9.75h18M3 14.25h18M9.75 4.5v15m4.5-15v15m-7.5-15H3v18h18v-18H3.75zM3.75 2.25v18m16.5-18v18"
+                      />
+                    </svg>
+                    <span className="mx-2 text-sm font-medium">Edificios</span>
+                  </a>
+                </Link>
+
+                <Link href="/reportes" legacyBehavior>
+                  <a className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.75 3v16.5a1.5 1.5 0 001.5 1.5h14.25a1.5 1.5 0 001.5-1.5V3M3.75 9.75h16.5M9.75 21V12.75M14.25 21V12.75"
+                      />
+                    </svg>
+                    <span className="mx-2 text-sm font-medium">Reportes</span>
                   </a>
                 </Link>
               </>

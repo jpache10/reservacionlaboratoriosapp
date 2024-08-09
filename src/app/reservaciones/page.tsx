@@ -7,8 +7,10 @@ import { Reservacion } from "./reservacion";
 
 export default function ReservacionesPage() {
   const [reservaciones, setReservaciones] = useState<Reservacion[]>([]);
+  const [sortedReservaciones, setSortedReservaciones] = useState<Reservacion[]>([]);
   const [selectedReservacion, setSelectedReservacion] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
   const modalRef = useRef<HTMLDialogElement>(null);
 
   // Abrir modal de confirmación
@@ -59,6 +61,7 @@ export default function ReservacionesPage() {
       try {
         const response = await getReservaciones();
         setReservaciones(response.data);
+        setSortedReservaciones(response.data);
       } catch (error) {
         console.error("Error fetching reservaciones:", error);
       }
@@ -66,6 +69,48 @@ export default function ReservacionesPage() {
 
     fetchReservaciones();
   }, []);
+
+  // Función para formatear la fecha
+  const formatFecha = (fechaString: string) => {
+    const fecha = new Date(fechaString);
+    const opcionesFecha = { day: "2-digit", month: "2-digit", year: "numeric" } as const;
+    const opcionesHora = { hour: "2-digit", minute: "2-digit" } as const;
+
+    const fechaFormateada = fecha.toLocaleDateString("es-ES", opcionesFecha);
+    const horaFormateada = fecha.toLocaleTimeString("es-ES", opcionesHora);
+
+    return `${fechaFormateada} ${horaFormateada}`;
+  };
+
+  // Ordenar las reservaciones
+  const sortReservaciones = (key: string) => {
+    let direction: "asc" | "desc" = "asc";
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+
+    const ordenado = [...sortedReservaciones].sort((a, b) => {
+      if (key === "FechaReservacion") {
+        return direction === "asc"
+          ? new Date(a.FechaReservacion).getTime() - new Date(b.FechaReservacion).getTime()
+          : new Date(b.FechaReservacion).getTime() - new Date(a.FechaReservacion).getTime();
+      } else if (key === "Estado") {
+        return direction === "asc" ? a.Estado.localeCompare(b.Estado) : b.Estado.localeCompare(a.Estado);
+      }
+      return 0;
+    });
+
+    setSortedReservaciones(ordenado);
+    setSortConfig({ key, direction });
+  };
+
+  // Determinar la dirección del ícono de ordenamiento
+  const getSortIcon = (key: string) => {
+    if (!sortConfig || sortConfig.key !== key) {
+      return "▲▼";
+    }
+    return sortConfig.direction === "asc" ? "▲" : "▼";
+  };
 
   return (
     <div className="ml-5 mt-5">
@@ -102,14 +147,22 @@ export default function ReservacionesPage() {
               <th scope="col" className="px-6 py-4 font-medium text-gray-900">
                 Número del Aula
               </th>
-              <th scope="col" className="px-6 py-4 font-medium text-gray-900">
-                Fecha
+              <th
+                scope="col"
+                className="px-6 py-4 font-medium text-gray-900 cursor-pointer"
+                onClick={() => sortReservaciones("FechaReservacion")}
+              >
+                Fecha {getSortIcon("FechaReservacion")}
               </th>
               <th scope="col" className="px-6 py-4 font-medium text-gray-900">
                 Horas
               </th>
-              <th scope="col" className="px-6 py-4 font-medium text-gray-900">
-                Estado
+              <th
+                scope="col"
+                className="px-6 py-4 font-medium text-gray-900 cursor-pointer"
+                onClick={() => sortReservaciones("Estado")}
+              >
+                Estado {getSortIcon("Estado")}
               </th>
               <th scope="col" className="px-6 py-4 font-medium text-gray-900">
                 Opciones
@@ -117,12 +170,12 @@ export default function ReservacionesPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-            {reservaciones.map((reservacion) => (
+            {sortedReservaciones.map((reservacion) => (
               <tr key={reservacion.ReservacionID} className="hover:bg-gray-50">
                 <td className="px-6 py-4">{reservacion.ReservacionID}</td>
                 <td className="px-6 py-4">{reservacion.EmpleadoID}</td>
                 <td className="px-6 py-4">{reservacion.AulaID}</td>
-                <td className="px-6 py-4">{reservacion.FechaReservacion}</td>
+                <td className="px-6 py-4">{formatFecha(reservacion.FechaReservacion)}</td>
                 <td className="px-6 py-4">{reservacion.CantidadHoras}</td>
                 <td className="px-6 py-4">
                   <span

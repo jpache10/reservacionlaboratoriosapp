@@ -14,12 +14,14 @@ export interface Reservacion {
   export interface ReservacionPost {
     id_empleado: number;
     id_aula: number;
-    fecha_reservacion: string; // formato ISO 8601
-    cantidad_hora_ingreso: number;
+    fecha_reservacion: Date; // Representando un datetime
+    cantidad_hora: number;
+    usuarioID: number;
     comentario: string;
-    estado: 'Pendiente' | 'Confirmada' | 'Cancelada';
+    estado: 'Pendiente' | 'Confirmada' | 'Cancelada'; // Representando un enum
   }
   
+
   export interface ReservacionApiResponse {
     estado: boolean;
     data: Reservacion[];

@@ -10,6 +10,7 @@ const api = axios.create({
 // Obtener todas las reservaciones
 export const getReservaciones = async (): Promise<ReservacionApiResponse> => {
   const response = await api.get('/reservacion/get_all');
+  console.log(response);
 
   if (!response.data || typeof response.data !== 'object' || !('estado' in response.data) || !('data' in response.data)) {
     throw new Error('Invalid API response format');
@@ -20,19 +21,39 @@ export const getReservaciones = async (): Promise<ReservacionApiResponse> => {
 
 // Obtener una reservación por ID
 export const getReservacionById = async (id: number): Promise<ReservacionIDApiResponse> => {
-  const response = await api.get(`/reservacion/get/${id}`);
-
-  if (!response.data || typeof response.data !== 'object') {
-    throw new Error('Invalid API response format');
+  try {
+    const response = await api.get(`/reservacion/get/${id}`);
+    if (!response.data || typeof response.data !== 'object') {
+      throw new Error('Invalid API response format');
+    }
+    return response.data as ReservacionIDApiResponse;
+  } catch (error) {
+    console.error('Error fetching reservacion:', error);
+    throw error;
   }
-
-  return response.data as ReservacionIDApiResponse;
-};
+}
 
 // Crear una nueva reservación
+// Función para formatear la fecha en 'YYYY-MM-DD HH:MM:SS'
+const formatMySQLDateTime = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
 export const createReservacion = async (reservacion: ReservacionPost): Promise<void> => {
   try {
-    const response = await api.post('/reservacion/store', reservacion);
+    // Convertir fecha_reservacion al formato MySQL 'YYYY-MM-DD HH:MM:SS'
+    const reservacionData = {
+      ...reservacion,
+      fecha_reservacion: formatMySQLDateTime(reservacion.fecha_reservacion),
+    };
+
+    const response = await api.post('/reservacion/store', reservacionData);
     if (!response.data) {
       throw new Error('Failed to create Reservacion');
     }
@@ -57,6 +78,7 @@ export const updateReservacion = async (reservacion: Omit<ReservacionPost, 'id_e
 
 // Eliminar una reservación
 export const deleteReservacion = async (id_reservacion: number): Promise<void> => {
+  console.log(id_reservacion);
   try {
     const response = await api.post('/reservacion/destroy', { id_reservacion });
     if (!response.data) {
