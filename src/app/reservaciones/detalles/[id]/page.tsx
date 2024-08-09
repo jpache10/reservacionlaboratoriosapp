@@ -86,13 +86,13 @@ export default function ReservacionDetails() {
       <div className="p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Reservación #{reservacion.ReservacionID}</h2>
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Empleado: {nombreEmpleado}</p>
+          <p className="text-sm text-gray-600">Empleado: {nombreEmpleado || "Desconocido"}</p>
         </div>
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Aula: {nombreAula}</p>
+          <p className="text-sm text-gray-600">Aula: {nombreAula || "Desconocido"}</p>
         </div>
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Usuario: {nombreUsuario}</p>
+          <p className="text-sm text-gray-600">Usuario: {nombreUsuario || "Desconocido"}</p>
         </div>
         <div className="mb-4">
           <p className="text-sm text-gray-600">Fecha de Reservación: {new Date(reservacion.FechaReservacion).toLocaleString()}</p>
