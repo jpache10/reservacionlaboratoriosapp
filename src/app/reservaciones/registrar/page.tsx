@@ -1,5 +1,3 @@
-// pages/reservaciones/registrar.tsx
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,7 +5,11 @@ import { useRouter } from "next/navigation";
 import { ReservacionPost } from "../reservacion";
 import { createReservacion } from "../reservacionservice";
 import { getAulas } from "../../aulas/aulasservice"; 
+import { getEmpleados } from "../../empleados/empleadoService"; 
+import { getUsuarios } from "../../usuarios/usuarioservice"; 
 import { Aula } from "../../aulas/aula"; 
+import { Empleado } from "../../empleados/empleado";
+import { Usuario } from "../../usuarios/usuario";
 import Link from "next/link";
 
 export default function NewReservationForm() {
@@ -24,6 +26,8 @@ export default function NewReservationForm() {
   });
 
   const [aulas, setAulas] = useState<Aula[]>([]);
+  const [empleados, setEmpleados] = useState<Empleado[]>([]);
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
   useEffect(() => {
     const fetchAulas = async () => {
@@ -35,7 +39,27 @@ export default function NewReservationForm() {
       }
     };
 
+    const fetchEmpleados = async () => {
+      try {
+        const response = await getEmpleados();
+        setEmpleados(response.data);
+      } catch (error) {
+        console.error("Error fetching empleados:", error);
+      }
+    };
+
+    const fetchUsuarios = async () => {
+      try {
+        const response = await getUsuarios();
+        setUsuarios(response.data);
+      } catch (error) {
+        console.error("Error fetching usuarios:", error);
+      }
+    };
+
     fetchAulas();
+    fetchEmpleados();
+    fetchUsuarios();
   }, []);
 
   const handleChange = (
@@ -95,17 +119,25 @@ export default function NewReservationForm() {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="id_empleado" className="block text-sm font-medium text-black mb-1">
-              ID del Empleado<span className="text-red-500">*</span>
+              Empleado<span className="text-red-500">*</span>
             </label>
-            <input
-              type="number"
+            <select
               name="id_empleado"
               id="id_empleado"
               value={formData.id_empleado}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
               required
-            />
+            >
+              <option value="" disabled>
+                Selecciona un empleado
+              </option>
+              {empleados.map((empleado) => (
+                <option key={empleado.EmpleadoID} value={empleado.EmpleadoID}>
+                  {empleado.Nombre}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label htmlFor="id_aula" className="block text-sm font-medium text-black mb-1">
@@ -131,17 +163,25 @@ export default function NewReservationForm() {
           </div>
           <div className="mb-4">
             <label htmlFor="usuarioID" className="block text-sm font-medium text-black mb-1">
-              ID del Usuario<span className="text-red-500">*</span>
+              Usuario<span className="text-red-500">*</span>
             </label>
-            <input
-              type="number"
+            <select
               name="usuarioID"
               id="usuarioID"
               value={formData.usuarioID}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
               required
-            />
+            >
+              <option value="" disabled>
+                Selecciona un usuario
+              </option>
+              {usuarios.map((usuario) => (
+                <option key={usuario.UsuarioID} value={usuario.UsuarioID}>
+                  {usuario.Usuario}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label htmlFor="fecha_reservacion" className="block text-sm font-medium text-black mb-1">
