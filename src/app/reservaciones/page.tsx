@@ -34,10 +34,13 @@ export default function ReservacionesPage() {
       setReservaciones((prevReservaciones) =>
         prevReservaciones.filter((reservacion) => reservacion.ReservacionID !== selectedReservacion)
       );
+      setSortedReservaciones((prevReservaciones) =>
+        prevReservaciones.filter((reservacion) => reservacion.ReservacionID !== selectedReservacion)
+      );
       closeModal();
     } catch (error) {
-      console.error("Error deleting reservacion:", error);
-      alert("Error eliminando la reservación. Por favor intenta de nuevo.");
+      console.error("Error eliminando la reservación:", error);
+      alert("Hubo un problema al intentar eliminar la reservación. Por favor, intenta de nuevo.");
     }
   };
 
@@ -63,7 +66,7 @@ export default function ReservacionesPage() {
         setReservaciones(response.data);
         setSortedReservaciones(response.data);
       } catch (error) {
-        console.error("Error fetching reservaciones:", error);
+        console.error("Error obteniendo las reservaciones:", error);
       }
     };
 

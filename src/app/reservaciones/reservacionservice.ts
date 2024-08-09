@@ -1,7 +1,7 @@
 // services/reservacionservice.ts
 
 import axios from 'axios';
-import { ReservacionApiResponse, ReservacionIDApiResponse, ReservacionPost } from './reservacion';
+import { ReservacionApiResponse, ReservacionIDApiResponse, ReservacionPost, ReservacionUpdate } from './reservacion';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL_LOCAL,
@@ -64,9 +64,13 @@ export const createReservacion = async (reservacion: ReservacionPost): Promise<v
 };
 
 // Actualizar una reservación existente
-export const updateReservacion = async (reservacion: Omit<ReservacionPost, 'id_empleado'> & { id_reservacion: number }): Promise<void> => {
+export const updateReservacion = async (reservacion: ReservacionUpdate): Promise<void> => {
   try {
-    const response = await api.post('/reservacion/update', reservacion);
+    const reservacionData = {
+      ...reservacion,
+      fecha_reservacion: formatMySQLDateTime(reservacion.fecha_reservacion),
+    };
+    const response = await api.post('/reservacion/update', reservacionData);
     if (!response.data) {
       throw new Error('Failed to update Reservacion');
     }

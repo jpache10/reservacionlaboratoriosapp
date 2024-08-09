@@ -20,7 +20,17 @@ export interface Reservacion {
     comentario: string;
     estado: 'Pendiente' | 'Confirmada' | 'Cancelada'; // Representando un enum
   }
-  
+
+  export interface ReservacionUpdate {
+    id_reservacion: number;
+    id_empleado: number;
+    id_aula: number;
+    fecha_reservacion: Date; // Representando un datetime
+    cantidad_hora: number;
+    usuarioID: number;
+    comentario: string;
+    estado: 'Pendiente' | 'Confirmada' | 'Cancelada'; // Representando un enum
+  }
 
   export interface ReservacionApiResponse {
     estado: boolean;
