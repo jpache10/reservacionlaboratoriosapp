@@ -12,6 +12,7 @@ export default function ReservacionesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
   const modalRef = useRef<HTMLDialogElement>(null);
+  const pdfRef = useRef<HTMLDivElement>(null);
 
   // Abrir modal de confirmación
   const openModal = (reservacionId: number) => {
@@ -115,6 +116,47 @@ export default function ReservacionesPage() {
     return sortConfig.direction === "asc" ? "▲" : "▼";
   };
 
+  // Generar reporte en formato CSV
+  const generarReporteCSV = () => {
+    const headers = ["ID", "Código Empleado", "Número del Aula", "Fecha", "Horas", "Estado"];
+    const rows = sortedReservaciones.map(reservacion => [
+      reservacion.ReservacionID,
+      reservacion.EmpleadoID,
+      reservacion.AulaID,
+      formatFecha(reservacion.FechaReservacion),
+      reservacion.CantidadHoras,
+      reservacion.Estado
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "reporte_reservaciones.csv");
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Generar reporte en formato PDF usando la función de impresión del navegador
+  const generarReportePDF = () => {
+    if (pdfRef.current) {
+      const printContents = pdfRef.current.innerHTML;
+      const originalContents = document.body.innerHTML;
+
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+      window.location.reload(); // Para recargar la página y restaurar los elementos interactivos
+    }
+  };
+
   return (
     <div className="ml-5 mt-5">
       <h1 className="text-3xl text-gray-700 font-bold mb-5">Reservaciones</h1>
@@ -131,13 +173,16 @@ export default function ReservacionesPage() {
         </ul>
       </div>
       <div className="flex justify-between mb-5">
-        <button className="btn btn-info font-bold">
-          <Link href="/reservaciones/registrar" legacyBehavior>
-            <a className="text-white">Registrar</a>
-          </Link>
-        </button>
+        <div>
+          <button className="btn btn-info font-bold">
+            <Link href="/reservaciones/registrar" legacyBehavior>
+              <a className="text-white">Registrar</a>
+            </Link>
+          </button>
+        </div>
+
       </div>
-      <div className="overflow-hidden rounded-lg border border-gray-200 shadow-md">
+      <div ref={pdfRef} className="overflow-hidden rounded-lg border border-gray-200 shadow-md">
         <table className="w-full border-collapse bg-white text-left text-sm text-gray-500">
           <thead className="bg-gray-50">
             <tr>
@@ -182,22 +227,20 @@ export default function ReservacionesPage() {
                 <td className="px-6 py-4">{reservacion.CantidadHoras}</td>
                 <td className="px-6 py-4">
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
-                      reservacion.Estado === "Confirmada"
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${reservacion.Estado === "Confirmada"
                         ? "bg-green-50 text-green-600"
                         : reservacion.Estado === "Pendiente"
-                        ? "bg-yellow-50 text-yellow-600"
-                        : "bg-red-50 text-red-600"
-                    }`}
+                          ? "bg-yellow-50 text-yellow-600"
+                          : "bg-red-50 text-red-600"
+                      }`}
                   >
                     <span
-                      className={`h-1.5 w-1.5 rounded-full ${
-                        reservacion.Estado === "Confirmada"
+                      className={`h-1.5 w-1.5 rounded-full ${reservacion.Estado === "Confirmada"
                           ? "bg-green-600"
                           : reservacion.Estado === "Pendiente"
-                          ? "bg-yellow-600"
-                          : "bg-red-600"
-                      }`}
+                            ? "bg-yellow-600"
+                            : "bg-red-600"
+                        }`}
                     ></span>
                     {reservacion.Estado}
                   </span>
@@ -263,6 +306,15 @@ export default function ReservacionesPage() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="my-4 ">
+        <button className="btn btn-neutral  ml-4" onClick={generarReporteCSV}>
+          Generar Reporte CSV
+        </button>
+        <button className="btn btn-neutral ml-4" onClick={generarReportePDF}>
+          Generar Reporte PDF
+        </button>
       </div>
 
       <div>

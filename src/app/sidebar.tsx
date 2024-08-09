@@ -210,26 +210,6 @@ export default function Sidebar() {
                     <span className="mx-2 text-sm font-medium">Edificios</span>
                   </a>
                 </Link>
-
-                <Link href="/reportes" legacyBehavior>
-                  <a className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3.75 3v16.5a1.5 1.5 0 001.5 1.5h14.25a1.5 1.5 0 001.5-1.5V3M3.75 9.75h16.5M9.75 21V12.75M14.25 21V12.75"
-                      />
-                    </svg>
-                    <span className="mx-2 text-sm font-medium">Reportes</span>
-                  </a>
-                </Link>
               </>
             )}
           </div>

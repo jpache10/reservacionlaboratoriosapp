@@ -3,9 +3,9 @@
 export const login = async (email: string, password: string) => {
   // Simular autenticación con un usuario y contraseña fijos
   const dummyUser = {
-    email: "jesuspache26@unapec.edu.do",
+    email: "juan.perez11@unapec.edu.do",
     password: "daniel123",
-    name: "jesuspache26"
+    name: "Juan Perez"
   };
 
   if (email === dummyUser.email && password === dummyUser.password) {

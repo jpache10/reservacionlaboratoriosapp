@@ -3,13 +3,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation"; // Cambiar a useParams
+import { useParams } from "next/navigation";
 import { getReservacionById } from "../../reservacionservice";
 import { Reservacion } from "../../reservacion";
 import Link from "next/link";
 
 export default function ReservacionDetails() {
-  const { id } = useParams(); // Obtén el ID desde useParams
+  const { id } = useParams();
   const [reservacion, setReservacion] = useState<Reservacion | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,13 +62,13 @@ export default function ReservacionDetails() {
       <div className="p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Reservación #{reservacion.ReservacionID}</h2>
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Empleado ID: {reservacion.EmpleadoID}</p>
+          <p className="text-sm text-gray-600">Empleado: {reservacion.NombreEmpleado}</p>
         </div>
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Aula ID: {reservacion.AulaID}</p>
+          <p className="text-sm text-gray-600">Aula: {reservacion.NombreAula}</p>
         </div>
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Usuario ID: {reservacion.UsuarioID}</p>
+          <p className="text-sm text-gray-600">Usuario: {reservacion.NombreUsuario}</p>
         </div>
         <div className="mb-4">
           <p className="text-sm text-gray-600">Fecha de Reservación: {new Date(reservacion.FechaReservacion).toLocaleString()}</p>
@@ -83,13 +83,13 @@ export default function ReservacionDetails() {
           <p className="text-sm text-gray-600">Estado: {reservacion.Estado}</p>
         </div>
         <div className="flex">
-            <Link href="/reservaciones" className="bg-gray-200 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 font-normal">
-              Volver
-            </Link>
-            <Link href="/reservaciones/editar{ponerid}" className="ml-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 font-normal">
-              Editar
-            </Link>
-          </div>
+          <Link href="/reservaciones" className="bg-gray-200 text-black px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 font-normal">
+            Volver
+          </Link>
+          <Link href={`/reservaciones/editar/${reservacion.ReservacionID}`} className="ml-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 font-normal">
+            Editar
+          </Link>
+        </div>
       </div>
     </div>
   );
