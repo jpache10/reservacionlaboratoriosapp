@@ -1,163 +1,142 @@
 "use client";
 
-import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { createEmpleado } from "../empleadoservice";
+import { EmpleadoPost } from "../empleado";
 
-export default function Page() {
-  const [isOpen, setIsOpen] = useState(false);
-  const modalRef = useRef<HTMLDialogElement>(null);
+export default function RegistrarEmpleadoPage() {
+  const [empleado, setEmpleado] = useState<EmpleadoPost>({
+    nombre: "",
+    cedula: "",
+    tandaLabor: "Mañana",
+    fechaIngreso: "",
+    correoElectronico: "",
+    noCarnet: "",
+    estado: "Activo",
+  });
+  
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
-  const openModal = () => {
-    setIsOpen(true);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setEmpleado({ ...empleado, [name]: value });
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      await createEmpleado(empleado);
+      router.push("/empleados");
+    } catch (err) {
+      console.error("Error creating empleado:", err);
+      setError("Hubo un error al registrar el empleado. Por favor, intenta de nuevo.");
+    }
   };
-
-  useEffect(() => {
-    if (isOpen && modalRef.current) {
-      modalRef.current.showModal();
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen && modalRef.current) {
-      modalRef.current.close();
-    }
-  }, [isOpen]);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
-          <div className="max-w-md mx-auto">
-            <div className="flex items-center space-x-5">
-              <div className="h-14 w-14 bg-yellow-200 rounded-full flex flex-shrink-0 justify-center items-center text-yellow-500 text-2xl font-mono">
-                i
-              </div>
-              <div className="block pl-2 font-semibold text-xl self-start text-gray-700">
-                <h2 className="leading-relaxed">Registrar un empleado</h2>
-                <p className="text-sm text-gray-500 font-normal leading-relaxed">
-                  Ingrese los datos para registrar un empleado nuevo
-                </p>
-              </div>
-            </div>
-            <div className="divide-y divide-gray-200">
-              <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                <div className="flex flex-col">
-                  <label className="leading-loose">Nombre</label>
-                  <input
-                    type="text"
-                    className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
-                    placeholder="Nombre del empleado"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="leading-loose">Tanda</label>
-                  <input
-                    type="text"
-                    className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
-                    placeholder="Tanda de labor"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="leading-loose">Correo</label>
-                  <input
-                    type="email"
-                    className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
-                    placeholder="Correo electrónico"
-                  />
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="flex flex-col">
-                    <label className="leading-loose">Fecha de Ingreso</label>
-                    <div className="relative focus-within:text-gray-600 text-gray-400">
-                      <input
-                        type="date"
-                        className="pr-4 pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
-                        placeholder="25/02/2020"
-                      />
-                      <div className="absolute left-3 top-2">
-                        <svg
-                          className="w-6 h-6"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          ></path>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col">
-                    <label className="leading-loose">No. Carnet</label>
-                    <div className="relative focus-within:text-gray-600 text-gray-400">
-                      <input
-                        type="text"
-                        className="pr-4 pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
-                        placeholder="26/02/2020"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <label className="leading-loose">Estado</label>
-                  <select className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600 h-10">
-                    <option value="">Activo</option>
-                    <option value="opcion1">Desactivado</option>
-                  </select>
-                </div>
-              </div>
-              <div className="pt-4 flex items-center space-x-4">
-                <button className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none">
-                  <svg
-                    className="w-6 h-6 mr-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    ></path>
-                  </svg>{" "}
-                  <Link href="/empleados">Volver</Link>
-                </button>
-
-                <button
-                  onClick={openModal}
-                  className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
-                >
-                  Registrar
-                </button>
-                <div>
-                  <dialog ref={modalRef} className="modal">
-                    <div className="modal-box">
-                      <h3 className="font-bold text-lg">Listo</h3>
-                      <p className="py-4">Empleado registrado con éxito</p>
-                      <div className="modal-action">
-                        <button className="btn" onClick={closeModal}>
-                          <Link href="/empleados">Cerrar</Link>
-                        </button>
-                      </div>
-                    </div>
-                  </dialog>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="ml-5 mt-5">
+      <h1 className="text-3xl text-gray-700 font-bold mb-5">Registrar Empleado</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Nombre</label>
+          <input
+            type="text"
+            name="nombre"
+            value={empleado.nombre}
+            onChange={handleChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
         </div>
-      </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Cédula</label>
+          <input
+            type="text"
+            name="cedula"
+            value={empleado.cedula}
+            onChange={handleChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Tanda Laboral</label>
+          <select
+            name="tandaLabor"
+            value={empleado.tandaLabor}
+            onChange={handleChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            required
+          >
+            <option value="Mañana">Mañana</option>
+            <option value="Tarde">Tarde</option>
+            <option value="Noche">Noche</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Fecha de Ingreso</label>
+          <input
+            type="date"
+            name="fechaIngreso"
+            value={empleado.fechaIngreso}
+            onChange={handleChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+          <input
+            type="email"
+            name="correoElectronico"
+            value={empleado.correoElectronico}
+            onChange={handleChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">No. Carnet</label>
+          <input
+            type="text"
+            name="noCarnet"
+            value={empleado.noCarnet}
+            onChange={handleChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Estado</label>
+          <select
+            name="estado"
+            value={empleado.estado}
+            onChange={handleChange}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            required
+          >
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+          </select>
+        </div>
+        {error && (
+          <div className="text-red-500 text-sm mt-2">
+            {error}
+          </div>
+        )}
+        <div>
+          <button
+            type="submit"
+            className="mt-4 w-full bg-blue-500 text-white p-2 rounded-md"
+          >
+            Registrar Empleado
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
